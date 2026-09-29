@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComicCraft AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <span class="badge">AI COMIC CREATOR</span>
+        <h1>ComicCraft AI</h1>
+        <p>Turn your idea into a bold five-panel comic with Gemini.</p>
+    </div>
+
+    {% if error %}
+    <div class="alert error">{{ error }}</div>
+    {% endif %}
+
+    <form class="card form-card" method="post" action="/generate" onsubmit="disableButton()">
+        <label>Story Prompt</label>
+        <textarea name="story_prompt" required placeholder="Example: A young programmer discovers a mysterious AI robot inside his laptop..."></textarea>
+
+        <div class="grid">
+            <div>
+                <label>Character</label>
+                <input name="character" value="Riyaz" required>
+            </div>
+            <div>
+                <label>Setting</label>
+                <input name="setting" value="Futuristic Chennai" required>
+            </div>
+            <div>
+                <label>Tone</label>
+                <select name="tone">
+                    <option>Adventure</option>
+                    <option>Action</option>
+                    <option>Funny</option>
+                    <option>Mystery</option>
+                    <option>Fantasy</option>
+                    <option>Drama</option>
+                </select>
+            </div>
+            <div>
+                <label>Art Style</label>
+                <select name="art_style">
+                    <option>Comic Book</option>
+                    <option>Cartoon</option>
+                    <option>Anime</option>
+                    <option>Manga</option>
+                    <option>Superhero</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="generateButton" type="submit">Generate Comic ⚡</button>
+        <p class="small">Model: {{ model }} · Repeated identical requests use the local cache.</p>
+    </form>
+</div>
+
+<script>
+function disableButton() {
+    const button = document.getElementById("generateButton");
+    button.disabled = true;
+    button.textContent = "Generating Comic...";
+}
+</script>
+</body>
+</html>

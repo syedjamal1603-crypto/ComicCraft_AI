@@ -1,0 +1,11 @@
+.env
+.env.*
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+.vscode/
+.idea/
+exports/*.pdf
+exports/latest_comic.json

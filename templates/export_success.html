@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Export Success</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container center">
+    <div class="card">
+        <div class="success">✓</div>
+        <h1>PDF Created Successfully</h1>
+        <p>{{ filename }}</p>
+        {% if filename %}
+        <a class="download" href="/download/{{ filename }}">Download PDF</a>
+        {% endif %}
+        <a class="back" href="/">← Back to ComicCraft</a>
+    </div>
+</div>
+</body>
+</html>

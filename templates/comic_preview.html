@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ comic.title }} - ComicCraft</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="topbar">
+        <a href="/" class="back">← Create another comic</a>
+        <span class="badge">{{ source|upper }}</span>
+    </div>
+
+    <div class="hero">
+        <span class="badge">YOUR COMIC</span>
+        <h1>{{ comic.title }}</h1>
+        <p>{{ comic.character }} · {{ comic.setting }} · {{ comic.tone }} · {{ comic.art_style }}</p>
+    </div>
+
+    {% if comic.notice %}
+    <div class="alert warning">
+        Gemini was unavailable, so the application used its built-in demo fallback. The comic layout is still fully usable for demonstration.
+    </div>
+    {% endif %}
+
+    <div class="comic-grid">
+        {% for panel in comic.panels %}
+        <article class="panel">
+            <div class="panel-number">PANEL {{ panel.panel_number }} — ACTION!</div>
+            <div class="illustration">
+                <div class="sun"></div>
+                <div class="ground"></div>
+                <div class="character-shape"></div>
+                <div class="speech">“{{ panel.dialogue }}”</div>
+            </div>
+            <h2>{{ panel.title }}</h2>
+            <p><strong>Scene:</strong> {{ panel.scene_description }}</p>
+            <p><strong>Narration:</strong> {{ panel.narration }}</p>
+            <details>
+                <summary>View AI image prompt</summary>
+                <p>{{ panel.image_prompt }}</p>
+            </details>
+        </article>
+        {% endfor %}
+    </div>
+
+    <div class="card export-card">
+        <h2>Save Your Comic</h2>
+        <p>The PDF is created locally and does not make another Gemini request.</p>
+        <button id="exportButton" onclick="exportPDF()">Create PDF ⚡</button>
+        <a id="downloadLink" class="download hidden"></a>
+    </div>
+</div>
+
+<script>
+const comic = {{ comic|tojson }};
+
+async function exportPDF() {
+    const button = document.getElementById("exportButton");
+    const link = document.getElementById("downloadLink");
+    button.disabled = true;
+    button.textContent = "Creating PDF...";
+
+    try {
+        const response = await fetch("/export", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({comic})
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "PDF export failed.");
+
+        link.href = data.download_url;
+        link.textContent = "Download PDF";
+        link.classList.remove("hidden");
+        button.textContent = "PDF Ready ✓";
+    } catch (error) {
+        alert(error.message);
+        button.disabled = false;
+        button.textContent = "Create PDF ⚡";
+    }
+}
+</script>
+</body>
+</html>
